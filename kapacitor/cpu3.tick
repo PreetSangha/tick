@@ -1,0 +1,10 @@
+dbrp "telegraf"."autogen"
+
+batch
+    |from()
+        .query('SELECT "cpu", usage_user FROM cpu')
+    |influxDBOut()
+        .database('telegraf')
+        .measurement('cpu3')
+
+
