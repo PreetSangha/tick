@@ -21,8 +21,12 @@ services:
        - ticknet
      volumes:
        - /c/dev/tick/kapacitor/data:/var/lib/kapacitor
+       - /c/dev/tick/kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
      ports:
       - 9092:9092
+     environment:
+       - KAPACITOR_HOSTNAME=kapacitor
+       - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
 
    grafana:
      depends_on: 
