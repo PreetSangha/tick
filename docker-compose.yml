@@ -21,6 +21,7 @@ services:
        - ticknet
      volumes:
        - /c/dev/tick/kapacitor/data:/var/lib/kapacitor
+       - /c/dev/influxdb-examples/kapacitor/removing-a-tag:/tmp/tags
        - /c/dev/tick/kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
      ports:
       - 9092:9092

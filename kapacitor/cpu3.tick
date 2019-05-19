@@ -1,8 +1,8 @@
 dbrp "telegraf"."autogen"
 
 batch
-    |from()
-        .query('SELECT "cpu", usage_user FROM cpu')
+    |query('SELECT "cpu", usage_user FROM "telegraf"."autogen".cpu')
+       .every(1m)  
     |influxDBOut()
         .database('telegraf')
         .measurement('cpu3')
