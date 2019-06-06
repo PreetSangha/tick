@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
    influxdb:
@@ -7,7 +7,7 @@ services:
      networks: 
        - ticknet
      volumes:
-       - /c/dev/tick/influxdb/data:/var/lib/influxdb
+       - ./influxdb/data:/var/lib/influxdb
      ports:
       - 8083:8083
       - 8086:8086
@@ -20,9 +20,8 @@ services:
      networks: 
        - ticknet
      volumes:
-       - /c/dev/tick/kapacitor/data:/var/lib/kapacitor
-       - /c/dev/influxdb-examples/kapacitor/removing-a-tag:/tmp/tags
-       - /c/dev/tick/kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
+       - ./kapacitor/data:/var/lib/kapacitor
+       - ./kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
      ports:
       - 9092:9092
      environment:
@@ -37,7 +36,7 @@ services:
      networks: 
        - ticknet
      volumes:
-       - /c/dev/tick/grafana/data:/var/lib/grafana
+       - ./grafana/data:/var/lib/grafana
      ports:
       - 3000:3000
      environment:
@@ -52,7 +51,7 @@ services:
      networks: 
        - ticknet
      volumes:
-       - /c/dev/tick/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
 
 networks:
   ticknet:
