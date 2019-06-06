@@ -1,5 +1,0 @@
-https://gigawatt-a4e5d01a.influxcloud.net:8086
-
-http://serkoinfluxdbfyb3k5oumv2bq.eastus.cloudapp.azure.com:8086
-
-http://serkoinfluxdbfyb3k5oumv2bq.eastus.cloudapp.azure.com:8086
