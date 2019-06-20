@@ -1,0 +1,11 @@
+{
+  "template-id": "template_airSearch_healthy",
+  "vars": {
+    "client": { "type": "string", "value": "ATPIUK" },
+    "period": { "type": "duration", "value": "15m" },
+    "IsOnAlarmState": {
+      "type": "lambda",
+      "value": "(\"total\" > 10 AND \"under60k_percent\" < 0.9) OR (\"total\" > 10 AND \"under40k_percent\" < 0.66) OR (\"total\" <= 10 AND \"total\" >= 5 AND \"under40k_percent\" < 0.2)"
+    }
+  }
+}

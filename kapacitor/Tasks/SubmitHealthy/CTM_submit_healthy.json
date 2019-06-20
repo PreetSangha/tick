@@ -1,0 +1,11 @@
+{
+  "template-id": "template_submit_healthy",
+  "vars": {
+    "client": { "type": "string", "value": "CTM" },
+    "period": { "type": "duration", "value": "15m" },
+    "IsOnAlarmState": {
+      "type": "lambda",
+      "value": "(\"total\" > 10 AND \"under60k_percent\" < 0.8) OR (\"total\" > 10 AND \"under40k_percent\" < 0.44) OR (\"total\" <= 10 AND \"total\" >= 3 AND \"under40k_percent\" < 0.2)"
+    }
+  }
+}

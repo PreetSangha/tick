@@ -1,0 +1,11 @@
+{
+  "template-id": "template_submit_healthy",
+  "vars": {
+    "client": { "type": "string", "value": "ATPIUK" },
+    "period": { "type": "duration", "value": "15m" },
+    "IsOnAlarmState": {
+      "type": "lambda",
+      "value": "(\"total\" > 1 AND \"under60k_percent\" < 0.5)"
+    }
+  }
+}

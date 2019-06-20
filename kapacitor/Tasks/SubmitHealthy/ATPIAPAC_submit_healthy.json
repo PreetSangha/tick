@@ -1,0 +1,11 @@
+{
+  "template-id": "template_submit_healthy",
+  "vars": {
+    "client": { "type": "string", "value": "ATPIAPAC" },
+    "period": { "type": "duration", "value": "15m" },
+    "IsOnAlarmState": {
+      "type": "lambda",
+      "value": "(\"total\" > 8 AND \"under60k_percent\" < 0.66) OR (\"total\" > 8 AND \"under40k_percent\" < 0.33) OR (\"total\" <= 8 AND \"total\" >= 3 AND \"under40k_percent\" < 0.2)"
+    }
+  }
+}

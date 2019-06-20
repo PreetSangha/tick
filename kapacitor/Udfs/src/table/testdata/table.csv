@@ -1,0 +1,5 @@
+client,region,domestic,total,compliance
+string,string,bool,int,float
+TT,APAC,false,100,0.9
+ATPIUK,EU,true,99,0.8
+TT,APAC,true,66,0.95

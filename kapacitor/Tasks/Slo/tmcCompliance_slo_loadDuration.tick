@@ -1,0 +1,87 @@
+dbrp "ServiceLevels"."autogen"
+
+var clientToRegion = '''
+client,region
+string,string
+EVT,NORAM
+FCMUS,NORAM
+SERKODEMOS,NORAM
+CTSUS,NORAM
+DT,NORAM
+ATPIUK,EUROPE
+'''
+
+var moduleToSlo = '''
+module,slo
+string,string
+zenoSearch,airSearch
+airAvailabilitySearch,airSearch
+carAvailabilitySearch,carSearch
+hotelAvailabilitySearch,hotelSearch
+confirmBooking,confirmAndBook
+zenoConfirmBooking,confirmAndBook
+dashboard,dashboard
+zenoNewBooking,newToSetup
+zenoExtras,recommendedToExtras
+'''
+
+var sloToBand = '''
+slo,band
+string,string
+airSearch,D
+carSearch,C
+hotelSearch,D
+confirmAndBook,D
+dashboard,B
+newToSetup,B
+recommendedToExtras,B
+'''
+
+// Get batch data from "LoadDuration" measurement recorded from SLO service 
+var loadDurationMeasurement = batch
+  |query('''
+SELECT count("duration") - sum("under1k") as "over1s", count("duration") - sum("under5k") as "over5s", count("duration") - sum("under10k") as "over10s", count("duration") - sum("under30k") as "over30s", count("duration") - sum("under60k") as "over60s", count("duration") AS "total" FROM "ServiceLevels"."autogen".loadDuration WHERE environment='PROD'
+''')
+    .period(5m)
+    .every(5m)
+    .groupBy('client','module','app')
+    .align()
+    .fill(0)
+
+  loadDurationMeasurement
+  |shift(5m)
+
+  @joinTable()
+    .table(clientToRegion)
+    .on('client')
+    .default('region:APAC')
+  
+  @joinTable()
+    .table(moduleToSlo)
+    .on('module')
+    .default('slo:unknown')
+
+  @joinTable()
+    .table(sloToBand)
+    .on('slo')
+    .default('band:E')
+
+  |eval(lambda: "slo",lambda: "app", lambda: "region", lambda: "band")
+    .as('slo','domain', 'region', 'band')
+    .tags('slo','domain', 'region', 'band')
+    .keep('over1s', 'over5s','over10s', 'over30s','over60s', 'total')
+
+  |delete()
+    .tag('module')
+    .tag('app')
+
+  |eval(lambda: "total", lambda: if("band" == 'A', "over1s", if("band" == 'B', "over5s", if("band" == 'C', "over10s", if("band" == 'D', "over30s", if("band" == 'E', "over60s", "over60s"))))))
+    .as('totalVolume','totalVolumeNotCompliant')
+    .keep('totalVolume','totalVolumeNotCompliant')
+
+  |where(lambda: "slo" != 'unknown')
+
+    |influxDBOut()
+    .database('ServiceLevels')
+    .retentionPolicy('autogen')
+    .measurement('tmcCompliance')

@@ -1,0 +1,8 @@
+batch
+    |query('SELECT * from "ServiceLevels"."autogen".loadDuration')
+       .every(1m)  
+    |influxDBOut()
+        .database('preet')
+        .measurement('loadDuration')
+
+

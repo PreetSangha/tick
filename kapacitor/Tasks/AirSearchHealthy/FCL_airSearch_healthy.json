@@ -1,0 +1,11 @@
+{
+  "template-id": "template_airSearch_healthy",
+  "vars": {
+    "client": { "type": "string", "value": "FCL" },
+    "period": { "type": "duration", "value": "15m" },
+    "IsOnAlarmState": {
+      "type": "lambda",
+      "value": "(\"total\" > 20 AND \"under60k_percent\" < 0.9) OR (\"total\" > 20 AND \"under30k_percent\" < 0.66) OR (\"total\" <= 20 AND \"total\" >= 5 AND \"under30k_percent\" < 0.2)"
+    }
+  }
+}
