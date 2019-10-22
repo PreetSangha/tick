@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+   influxdb:
+     container_name: influxdb
+     image: influxdb
+     networks: 
+       - ticknet
+     volumes:
+       - ./influxdb/data:/var/lib/influxdb
+     ports:
+      - 8083:8083
+      - 8086:8086
+
+   kapacitor:
+     depends_on: 
+      - influxdb
+     container_name: kapacitor
+     image: kapacitor
+     networks: 
+       - ticknet
+     volumes:
+       - ./kapacitor/data:/var/lib/kapacitor
+       - ./kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
+     ports:
+      - 9092:9092
+     environment:
+       - KAPACITOR_HOSTNAME=kapacitor
+       - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
+
+   grafana:
+     depends_on: 
+      - influxdb
+     container_name: grafana
+     image: grafana/grafana
+     networks: 
+       - ticknet
+     volumes:
+       - ./grafana/data:/var/lib/grafana
+     ports:
+      - 3000:3000
+     environment:
+       - GF_SECURITY_ADMIN_PASSWORD=admin
+
+   telegraf:
+     depends_on: 
+      - influxdb
+      - kapacitor
+     container_name: telegraf
+     image: telegraf
+     networks: 
+       - ticknet
+     volumes:
+       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+networks:
+  ticknet:

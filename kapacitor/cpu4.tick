@@ -1,0 +1,11 @@
+dbrp "telegraf"."autogen"
+
+batch
+    |from()
+        .measurement('cpu')
+        .
+    |influxDBOut()
+        .database('telegraf')
+        .measurement('cpu3')
+
+
